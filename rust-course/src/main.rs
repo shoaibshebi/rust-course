@@ -39,6 +39,10 @@ enum AnimalType {
     Rabbit,
 }
 
+enum Pet {
+    Dog { name: String, height: u32 },
+    Cat { name: String, height: u32 },
+}
 enum Shapes {
     Circle { radius: f64, center: (f64, f64) },
     Rectangle { width: f64, height: f64 },
@@ -102,7 +106,18 @@ fn main() {
         width: 3.2,
         height: 3.2,
     };
+    //this matches only shapes not the values
     if let Shapes::Rectangle { width, height } = rectangle {
         println!("width={}, height={} ", width, height);
     }
+
+    let fluffy = Pet::Cat {
+        name: "Fluffy".to_string(),
+        height: 2,
+    };
+    let name = match fluffy {
+        Pet::Cat { name, height } => height,
+        Pet::Dog { name, height } => height,
+    };
+    println!("name  {} ", name);
 }
