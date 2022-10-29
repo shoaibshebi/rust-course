@@ -3,121 +3,45 @@
 #![allow(dead_code)]
 //cargo-watch -qc -x run -x clippy
 
-//readonly reference
-fn greet(name: &String) {
-    println!("Hello, {}", name);
-}
-//mutable reference
-fn greet2(fruit: &mut String) {
-    println!("Hello, {}", fruit);
-}
-//this empty braces says this fn has no return type
-fn say_hello_world() {
-    let message = String::from("hellow");
-    println!("{} ", message)
-}
+use std::{collections::HashMap, vec};
 
-fn process_name(name: &str, callback: fn(&str) -> ()) {
-    callback(name);
-}
-
-//STRUCTS
-
-struct Person {
-    name: String,
-    age: u8,
-}
-fn person_print(name: String, age: u8) {
-    let person = Person { name, age };
-}
-
-struct Point(f64, f64, f64);
-
-enum AnimalType {
-    Dog,
-    Cat,
-    Rabbit,
-}
-
-enum Pet {
-    Dog { name: String, height: u32 },
-    Cat { name: String, height: u32 },
-}
-enum Shapes {
-    Circle { radius: f64, center: (f64, f64) },
-    Rectangle { width: f64, height: f64 },
+fn get_values() -> (String, String, i32) {
+    ("Hellow".to_string(), "World".to_string(), 30)
 }
 
 fn main() {
-    // let mut first_name = String::from("John");
-    // // let second_name = first_name; //this is not good
-    // let mut second_name = &first_name; // this is good
-    //                                    //try to change data
-    //                                    // second_name = String::from("John mean"); //will not do that
-    // println!("hellow {}", first_name);
+    let (hello, _, _) = get_values();
 
-    // let personal_data = (32, "shoaib");
-    // let (age, name) = personal_data;
-    // println!(" {} {}", age, name);
+    let values: [i32; 2] = [2, 3];
+    //dynamc length size vector
+    let mut values2 = vec![2, 3];
+    println!("values vector length {}", values.len());
+    values2.push(5);
 
-    // let mut firstint = 32;
-    // let mut secint = firstint;
-    // secint += 1;
-    // println!("{} {}", firstint, secint);
+    let mut hashValues = HashMap::new();
+    hashValues.insert("foo", "bar");
 
-    let fruitname = String::from("Johb");
-    //this is good , when you call
-    greet(&fruitname);
-    println!("fruitname {} ", fruitname);
-
-    // // this is not good
-    // greet(fruitname);
-    // println!("fruitname {} ", fruitname); //you will not get value here, coz it's deallocated at the end of greet func
-
-    let mut mango = String::from("Mango>");
-    greet2(&mut mango);
-
-    say_hello_world(); // this returns uint
-
-    //inline functions
-    let say_somthing = || String::from("hellow man");
-    let say_somthing_out = say_somthing();
-    println!("{} ", say_somthing_out);
-
-    //first class functions
-
-    //structs
-    // let structOut = person_print("shoaib".to_string(), 24);
-
-    //tupples
-    let point: Point = Point(0.0, 0.1, 0.2);
-    println!("{}", point.1);
-
-    // match/switch
-    let fluffy = AnimalType::Dog;
-    match fluffy {
-        AnimalType::Dog => println!("Woof"),
-        AnimalType::Cat => println!("Meow"),
-        AnimalType::Rabbit => println!("Hoot"),
-        _ => println!("Soemthign default"),
+    if hashValues.contains_key("name") {
+        println!("Key is present");
     }
 
-    let rectangle = Shapes::Rectangle {
-        width: 3.2,
-        height: 3.2,
-    };
-    //this matches only shapes not the values
-    if let Shapes::Rectangle { width, height } = rectangle {
-        println!("width={}, height={} ", width, height);
+    let entrySingle = hashValues.entry("foo");
+
+    match entrySingle {
+        std::collections::hash_map::Entry::Occupied(value) => {
+            println!("key  {}, value {}", value.key(), value.get())
+        }
+        _ => println!("Not found"),
     }
 
-    let fluffy = Pet::Cat {
-        name: "Fluffy".to_string(),
-        height: 2,
-    };
-    let name = match fluffy {
-        Pet::Cat { name, height } => height,
-        Pet::Dog { name, height } => height,
-    };
-    println!("name  {} ", name);
+    //iterators
+    let values = vec![1, 2, 3, 4];
+    // let foo = values.iter();
+    // println!("values {:?}", foo);
+    let updated_foo = values.iter().map(|x| x * 2);
+    println!("{:?}", updated_foo);
+
+    for value in values.iter() {
+        println!("{}", value)
+    }
 }
